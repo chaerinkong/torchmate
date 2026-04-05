@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 
 export default function SettingsPage() {
   const [apiKey, setApiKey] = useState("");
-  const [model, setModel] = useState("anthropic/claude-sonnet-4");
+  const [model, setModel] = useState("qwen/qwen3-235b-a22b:free");
+  const [fallbackModel, setFallbackModel] = useState("nvidia/llama-3.1-nemotron-ultra-253b-v1:free");
   const [hasApiKey, setHasApiKey] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -13,7 +14,8 @@ export default function SettingsPage() {
     fetch("/api/config")
       .then((r) => r.json())
       .then((data) => {
-        setModel(data.model || "anthropic/claude-sonnet-4");
+        setModel(data.model || "qwen/qwen3-235b-a22b:free");
+        setFallbackModel(data.fallbackModel || "nvidia/llama-3.1-nemotron-ultra-253b-v1:free");
         setHasApiKey(data.hasApiKey || false);
       });
   }, []);
@@ -21,7 +23,7 @@ export default function SettingsPage() {
   const handleSave = async () => {
     setSaving(true);
     setSaved(false);
-    const body: Record<string, string> = { model };
+    const body: Record<string, string> = { model, fallbackModel };
     if (apiKey) body.apiKey = apiKey;
 
     await fetch("/api/config", {
@@ -40,14 +42,47 @@ export default function SettingsPage() {
   };
 
   const popularModels = [
-    "anthropic/claude-sonnet-4",
-    "anthropic/claude-haiku-4",
-    "openai/gpt-4o",
-    "openai/gpt-4o-mini",
+    "qwen/qwen3-235b-a22b:free",
+    "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
+    "deepseek/deepseek-chat-v3-0324:free",
+    "meta-llama/llama-4-maverick:free",
     "google/gemini-2.5-flash-preview",
-    "meta-llama/llama-4-maverick",
-    "deepseek/deepseek-chat-v3-0324",
+    "anthropic/claude-sonnet-4",
+    "openai/gpt-4o-mini",
   ];
+
+  const modelSelector = (
+    label: string,
+    value: string,
+    setValue: (v: string) => void
+  ) => (
+    <div className="mb-5">
+      <label className="block text-sm font-medium text-zinc-300 mb-2">
+        {label}
+      </label>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="w-full bg-zinc-950 border border-zinc-700 rounded-md px-3 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-sky-500 text-sm mb-2"
+      />
+      <div className="flex flex-wrap gap-1.5">
+        {popularModels.map((m) => (
+          <button
+            key={m}
+            onClick={() => setValue(m)}
+            className={`text-xs px-2 py-1 rounded transition-colors ${
+              value === m
+                ? "bg-sky-600 text-white"
+                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+            }`}
+          >
+            {m.split("/")[1]}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <div>
@@ -81,44 +116,12 @@ export default function SettingsPage() {
           </p>
         </div>
 
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Model
-          </label>
-          <input
-            type="text"
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-            placeholder="anthropic/claude-sonnet-4"
-            className="w-full bg-zinc-950 border border-zinc-700 rounded-md px-3 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-sky-500 text-sm mb-2"
-          />
-          <div className="flex flex-wrap gap-1.5">
-            {popularModels.map((m) => (
-              <button
-                key={m}
-                onClick={() => setModel(m)}
-                className={`text-xs px-2 py-1 rounded transition-colors ${
-                  model === m
-                    ? "bg-sky-600 text-white"
-                    : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
-                }`}
-              >
-                {m.split("/")[1]}
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-zinc-600 mt-2">
-            Browse models at{" "}
-            <a
-              href="https://openrouter.ai/models"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sky-400 hover:text-sky-300"
-            >
-              openrouter.ai/models
-            </a>
-          </p>
-        </div>
+        {modelSelector("Primary Model", model, setModel)}
+        {modelSelector("Fallback Model", fallbackModel, setFallbackModel)}
+
+        <p className="text-xs text-zinc-500 mb-4">
+          If the primary model is rate-limited (429) or has a server error, the fallback model is used automatically.
+        </p>
 
         <button
           onClick={handleSave}
@@ -127,6 +130,18 @@ export default function SettingsPage() {
         >
           {saving ? "Saving..." : saved ? "Saved!" : "Save"}
         </button>
+
+        <p className="text-xs text-zinc-600 mt-3">
+          Browse models at{" "}
+          <a
+            href="https://openrouter.ai/models"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sky-400 hover:text-sky-300"
+          >
+            openrouter.ai/models
+          </a>
+        </p>
       </div>
     </div>
   );

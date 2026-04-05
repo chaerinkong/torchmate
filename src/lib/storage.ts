@@ -27,11 +27,13 @@ function writeJSON<T>(filename: string, data: T) {
 export interface Config {
   apiKey: string;
   model: string;
+  fallbackModel: string;
 }
 
 const DEFAULT_CONFIG: Config = {
   apiKey: "",
-  model: "anthropic/claude-sonnet-4",
+  model: "qwen/qwen3-235b-a22b:free",
+  fallbackModel: "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
 };
 
 export function getConfig(): Config {

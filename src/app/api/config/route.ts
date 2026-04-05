@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
 
     if (body.apiKey !== undefined) updates.apiKey = body.apiKey;
     if (body.model !== undefined) updates.model = body.model;
+    if (body.fallbackModel !== undefined) updates.fallbackModel = body.fallbackModel;
 
     setConfig(updates);
     return NextResponse.json({ success: true });
