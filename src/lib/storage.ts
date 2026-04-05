@@ -32,8 +32,8 @@ export interface Config {
 
 const DEFAULT_CONFIG: Config = {
   apiKey: "",
-  model: "qwen/qwen3-235b-a22b:free",
-  fallbackModel: "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
+  model: "qwen/qwen3.6-plus:free",
+  fallbackModel: "nvidia/nemotron-3-super-120b-a12b:free",
 };
 
 export function getConfig(): Config {

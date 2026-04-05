@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 
 export default function SettingsPage() {
   const [apiKey, setApiKey] = useState("");
-  const [model, setModel] = useState("qwen/qwen3-235b-a22b:free");
-  const [fallbackModel, setFallbackModel] = useState("nvidia/llama-3.1-nemotron-ultra-253b-v1:free");
+  const [model, setModel] = useState("qwen/qwen3.6-plus:free");
+  const [fallbackModel, setFallbackModel] = useState("nvidia/nemotron-3-super-120b-a12b:free");
   const [hasApiKey, setHasApiKey] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -14,8 +14,8 @@ export default function SettingsPage() {
     fetch("/api/config")
       .then((r) => r.json())
       .then((data) => {
-        setModel(data.model || "qwen/qwen3-235b-a22b:free");
-        setFallbackModel(data.fallbackModel || "nvidia/llama-3.1-nemotron-ultra-253b-v1:free");
+        setModel(data.model || "qwen/qwen3.6-plus:free");
+        setFallbackModel(data.fallbackModel || "nvidia/nemotron-3-super-120b-a12b:free");
         setHasApiKey(data.hasApiKey || false);
       });
   }, []);
@@ -42,8 +42,8 @@ export default function SettingsPage() {
   };
 
   const popularModels = [
-    "qwen/qwen3-235b-a22b:free",
-    "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
+    "qwen/qwen3.6-plus:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
     "deepseek/deepseek-chat-v3-0324:free",
     "meta-llama/llama-4-maverick:free",
     "google/gemini-2.5-flash-preview",
