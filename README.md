@@ -7,7 +7,7 @@ A collection of daily quiz apps that help you learn through LLM-generated questi
 | App | Topic | Status |
 |-----|-------|--------|
 | [TorchMate](torchmate/) | PyTorch internals & best practices | Live |
-| [EnglishMate](englishmate/) | English vocabulary & grammar | In progress |
+| [EnglishMate](englishmate/) | English vocabulary & grammar | Live |
 
 ## Getting Started
 
