@@ -49,9 +49,9 @@ export default function Quiz() {
       const data = await res.json();
       if (data.error) {
         setError(data.error);
-        return;
+      } else {
+        await fetchQuestion();
       }
-      await fetchQuestion();
     } catch {
       setError("Failed to generate questions");
     }
