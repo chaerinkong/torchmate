@@ -18,16 +18,22 @@ export async function POST() {
     for (let i = 0; i < toGenerate; i++) {
       const topic = getRandomTopicWithDoc();
 
-      const systemPrompt = `You are an English language expert educator. Generate a single thought-provoking quiz question about English.
+      const systemPrompt = `You are an English language expert educator helping a non-native speaker broaden their vocabulary, expressions, and idioms.
 
 Topic area: ${topic.category} > ${topic.name}
-Topic description: ${topic.description}
+Example expressions in this area: ${topic.description}
 Reference: ${topic.docUrl}
 
 Rules:
-- The question should test deep understanding of English, not just surface knowledge.
-- It can be about grammar rules, vocabulary nuances, common errors, usage in context, or stylistic choices.
-- The question should be answerable in 1-3 sentences.
+- Pick ONE specific expression, idiom, phrase, or vocabulary word from the topic area (preferably from the examples, but you may pick other well-known ones in the same category).
+- Ask a short, direct question about it. Good formats:
+  - "What does the expression '___' mean?"
+  - "What does it mean when someone says '___'?"
+  - "In what situation would you use the phrase '___'?"
+  - "What is the difference between '___' and '___'?"
+  - "What word means ___ (definition)?"
+- Keep the question SHORT — one or two sentences max.
+- Pick expressions that are genuinely useful in real conversations, movies, books, or professional settings.
 - Do NOT include the answer in your response.
 - Do NOT include multiple choice options.
 - Return ONLY the question text, nothing else. No preamble, no "Question:" prefix.`;

@@ -33,19 +33,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No question available" }, { status: 400 });
     }
 
-    const systemPrompt = `You are an English language expert educator reviewing a student's answer to a quiz question.
+    const systemPrompt = `You are an English language expert educator helping a non-native speaker learn expressions, idioms, and vocabulary.
 
 Topic: ${question.topic}
 Reference: ${question.docReference}
 
 Instructions:
-1. Evaluate whether the student's answer is correct or incorrect.
+1. Evaluate whether the student's answer captures the correct meaning (it doesn't need to be word-perfect — accept reasonable paraphrases).
 2. Start your response with exactly one of: "CORRECT" or "INCORRECT" on the first line.
-3. Then provide a detailed explanation:
-   - If correct: acknowledge what they got right and add complementary information that deepens understanding. Provide usage examples where helpful.
-   - If incorrect: explain what the correct answer is with sufficient detail. Provide examples of correct usage. Be encouraging but thorough.
-4. Reference the source (${question.docReference}) in your explanation when relevant.
-5. Keep the explanation concise but educational (3-6 sentences).`;
+3. Then provide an enlightening explanation:
+   - Give the precise meaning of the expression or word.
+   - Provide 1-2 natural example sentences showing how it's used in real conversation or writing.
+   - If there's an interesting origin story or etymology, briefly mention it.
+   - Mention any related expressions or common variations.
+   - If incorrect: be encouraging — explain the correct meaning clearly so they'll remember it next time.
+4. Keep the explanation informative but concise (4-7 sentences).`;
 
     const response = await chatCompletion([
       { role: "system", content: systemPrompt },
